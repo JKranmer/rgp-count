@@ -1,0 +1,183 @@
+{
+	"info": {
+		"_postman_id": "84d5df65-8b17-48b4-934c-68729cc55fe7",
+		"name": "RPG Character Tracker API (UUID)",
+		"description": "Collection of API endpoints for tracking RPG characters using unique UUID identifiers.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List Characters",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/characters",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"characters"
+					]
+				},
+				"description": "Retrieves the list of all characters sorted by their initiative order (highest first)."
+			},
+			"response": []
+		},
+		{
+			"name": "Add Character",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Gandalf\",\n    \"character_type\": \"player\",\n    \"max_hp\": 80,\n    \"current_hp\": 80,\n    \"order\": 20\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/characters",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"characters"
+					]
+				},
+				"description": "Adds a new character. A unique 'id' (UUID) will be generated and returned in the JSON response."
+			},
+			"response": []
+		},
+		{
+			"name": "Damage Character",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 15\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/characters/{{character_id}}/damage",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"characters",
+						"{{character_id}}",
+						"damage"
+					]
+				},
+				"description": "Deals damage to a specific character by ID. HP will cap at 0."
+			},
+			"response": []
+		},
+		{
+			"name": "Heal Character",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 10\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/characters/{{character_id}}/heal",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"characters",
+						"{{character_id}}",
+						"heal"
+					]
+				},
+				"description": "Heals a specific character by ID. HP will cap at max_hp."
+			},
+			"response": []
+		},
+		{
+			"name": "Update Initiative Order",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"order\": 18\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/characters/{{character_id}}/order",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"characters",
+						"{{character_id}}",
+						"order"
+					]
+				},
+				"description": "Updates the initiative/order value of a specific character by ID."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Character",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/characters/{{character_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"characters",
+						"{{character_id}}"
+					]
+				},
+				"description": "Deletes a specific character by ID."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		},
+		{
+			"key": "character_id",
+			"value": "replace-with-actual-character-id",
+			"type": "string"
+		}
+	]
+}

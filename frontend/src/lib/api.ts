@@ -1,6 +1,18 @@
 import { Character, AddCharacterPayload } from '@/types/character';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000/api';
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST?.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '') ||
+  (API_HOST ? `https://${API_HOST}/api` : undefined) ||
+  (process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:5000/api' : undefined);
+
+function getBaseUrl(): string {
+  if (!BASE_URL) {
+    throw new Error('NEXT_PUBLIC_API_URL must be set to the backend API URL ending in /api.');
+  }
+
+  return BASE_URL;
+}
 
 async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, {
@@ -25,8 +37,9 @@ export const api = {
    * Health check to test backend connection status
    */
   async checkHealth(): Promise<boolean> {
+    const baseUrl = getBaseUrl();
     try {
-      const res = await fetch(`${BASE_URL}/characters`, { method: 'GET', cache: 'no-store' });
+      const res = await fetch(`${baseUrl}/characters`, { method: 'GET', cache: 'no-store' });
       return res.ok;
     } catch {
       return false;
@@ -37,7 +50,7 @@ export const api = {
    * List characters sorted by initiative order
    */
   async getCharacters(): Promise<Character[]> {
-    return fetchJson<Character[]>(`${BASE_URL}/characters`, {
+    return fetchJson<Character[]>(`${getBaseUrl()}/characters`, {
       method: 'GET',
       cache: 'no-store',
     });
@@ -47,7 +60,7 @@ export const api = {
    * Add a new character
    */
   async addCharacter(payload: AddCharacterPayload): Promise<Character> {
-    return fetchJson<Character>(`${BASE_URL}/characters`, {
+    return fetchJson<Character>(`${getBaseUrl()}/characters`, {
       method: 'POST',
       body: JSON.stringify(payload),
     });
@@ -57,7 +70,7 @@ export const api = {
    * Delete a character by ID
    */
   async deleteCharacter(id: string): Promise<{ message: string }> {
-    return fetchJson<{ message: string }>(`${BASE_URL}/characters/${id}`, {
+    return fetchJson<{ message: string }>(`${getBaseUrl()}/characters/${id}`, {
       method: 'DELETE',
     });
   },
@@ -66,7 +79,7 @@ export const api = {
    * Apply damage to a character
    */
   async damageCharacter(id: string, amount: number): Promise<Character> {
-    return fetchJson<Character>(`${BASE_URL}/characters/${id}/damage`, {
+    return fetchJson<Character>(`${getBaseUrl()}/characters/${id}/damage`, {
       method: 'POST',
       body: JSON.stringify({ amount }),
     });
@@ -76,7 +89,7 @@ export const api = {
    * Apply heal to a character
    */
   async healCharacter(id: string, amount: number): Promise<Character> {
-    return fetchJson<Character>(`${BASE_URL}/characters/${id}/heal`, {
+    return fetchJson<Character>(`${getBaseUrl()}/characters/${id}/heal`, {
       method: 'POST',
       body: JSON.stringify({ amount }),
     });
@@ -86,7 +99,7 @@ export const api = {
    * Update character initiative order
    */
   async updateOrder(id: string, order: number): Promise<Character> {
-    return fetchJson<Character>(`${BASE_URL}/characters/${id}/order`, {
+    return fetchJson<Character>(`${getBaseUrl()}/characters/${id}/order`, {
       method: 'PATCH',
       body: JSON.stringify({ order }),
     });

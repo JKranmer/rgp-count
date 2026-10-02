@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: rgp-count-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app.main:app
+
+  - type: static
+    name: rgp-count-frontend
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: out
+    envVars:
+      - key: NEXT_PUBLIC_API_HOST
+        fromService:
+          type: web
+          name: rgp-count-backend
+          property: host

@@ -12,7 +12,15 @@
         "name": "Gandalf",
         "character_type": "player",
         "max_hp": 30,
-        "current_hp": 10,
+        "current_hp": 5,
         "order": 1
+    },
+    "66e80718-9c08-434d-af56-e51aecc8b830": {
+        "id": "66e80718-9c08-434d-af56-e51aecc8b830",
+        "name": "Gorila",
+        "character_type": "monster",
+        "max_hp": 20,
+        "current_hp": 20,
+        "order": 11
     }
 }
